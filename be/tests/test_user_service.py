@@ -10,7 +10,7 @@ from utils.security import verify_password
 def user_data():
     return UserCreateDTO(
         email="user@example.com", password="password123", name="Test User"
-    )
+    )   
 
 
 def test_register_user_success(user_service: UserService, user_data: UserCreateDTO):

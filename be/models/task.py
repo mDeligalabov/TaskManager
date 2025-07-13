@@ -2,7 +2,6 @@ from typing import Optional
 from sqlmodel import SQLModel, Field, Relationship
 from models.user import User
 
-
 class Task(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     title: str
@@ -20,7 +19,6 @@ class Task(SQLModel, table=True):
         sa_relationship_kwargs={"foreign_keys": "Task.creator_id"},
     )
 
-
 class TaskCreateDTO(SQLModel):
     title: str
     description: str
@@ -32,3 +30,11 @@ class TaskUpdateDTO(SQLModel):
     description: Optional[str] = None
     assignee_id: Optional[int] = None
     is_complete: Optional[bool] = None
+
+class TaskWithAssigneeDTO(SQLModel):
+    id: int
+    title: str
+    description: str
+    assignee_id: int | None = None
+    is_complete: Optional[bool] = None
+    assignee: Optional[User]

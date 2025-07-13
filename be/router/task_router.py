@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from models.user import UserOutDTO
-from models.task import TaskCreateDTO, Task, TaskUpdateDTO
+from models.task import TaskCreateDTO, Task, TaskUpdateDTO, TaskWithAssigneeDTO
 from service.task_service import TaskServiceDep
 from utils.dependencies import admin_required, get_current_user
 from utils.exception import UserNotFoundException
@@ -10,21 +10,22 @@ from utils.exception import UserNotFoundException
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 
-@router.get("/")
+@router.get("/", response_model=List[TaskWithAssigneeDTO])
 async def get_all_tasks(
     task_service: TaskServiceDep, current_admin: UserOutDTO = Depends(admin_required)
-) -> List[Task]:
-    return task_service.find_all()
+):
+    tasks = task_service.find_all()
+    return tasks
 
 
-@router.get("/my")
+@router.get("/my", response_model=List[TaskWithAssigneeDTO])
 async def get_my_tasks(
     task_service: TaskServiceDep, current_user: UserOutDTO = Depends(get_current_user)
 ) -> List[Task]:
     return task_service.find_all_for_user(user_id=current_user.id)
 
 
-@router.get("/{task_id}")
+@router.get("/{task_id}", response_model=TaskWithAssigneeDTO)
 async def get_task(
     task_service: TaskServiceDep,
     task_id: int,
@@ -37,8 +38,7 @@ async def get_task(
         )
     return task
 
-
-@router.post("/")
+@router.post("")
 async def create_task(
     task_service: TaskServiceDep,
     task: TaskCreateDTO,
@@ -57,11 +57,11 @@ async def create_task(
 async def update_task(
     task_service: TaskServiceDep,
     task_id: int,
-    task: TaskUpdateDTO,
+    task_update: TaskUpdateDTO,
     current_user: UserOutDTO = Depends(get_current_user),
 ) -> Task:
     try:
-        updated_task = task_service.update_task(task_id=task_id, task_update=task)
+        updated_task = task_service.update_task(task_id=task_id, task_update=task_update)
         return updated_task
     except UserNotFoundException:
         raise HTTPException(

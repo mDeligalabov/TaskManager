@@ -12,7 +12,7 @@ class AuthService:
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def authenticate_user(self, email: str, password: str) -> TokenDTO:
+    def authenticate_user(self, email: str, password: str, admin_login = False) -> TokenDTO:
         query = select(User).where(User.email == email)
         user = self.session.exec(query).first()
         if not user or not verify_password(password, user.password):
@@ -27,6 +27,13 @@ class AuthService:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="User account is deactivated.",
             )
+
+        if admin_login and not user.is_admin:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User is not an administrator",
+            )
+
 
         access_token = create_access_token(data={"sub": user.email, "id": user.id})
         return TokenDTO.model_validate(

@@ -1,5 +1,6 @@
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
+from sqlalchemy.orm import joinedload
 from sqlmodel import Session, select
 from database import get_session
 from models.task import TaskCreateDTO, Task, TaskUpdateDTO
@@ -12,10 +13,16 @@ class TaskService:
         self.session = session
 
     def get_task_by_id(self, task_id: int):
-        return self.session.get(Task, task_id)
+        statement = (
+            select(Task)
+            .where(Task.id == task_id)
+            .options(joinedload(Task.assignee))
+        )
+        task = self.session.exec(statement).one_or_none()
+        return task
 
     def find_all(self):
-        query = select(Task)
+        query = select(Task).options(joinedload(Task.assignee))
         return self.session.exec(query).all()
 
     def find_all_for_user(self, user_id: int):
@@ -48,9 +55,13 @@ class TaskService:
         update_fields = task_update.model_dump(exclude_defaults=True)
         for key, value in update_fields.items():
             if key == "assignee_id" and value is not None:
-                user = self.session.get(User, value)
-                if not user:
-                    raise UserNotFoundException
+                # Unassign task for assignee_id value of -1
+                if value == -1:
+                    value = None
+                else:
+                    user = self.session.get(User, value)
+                    if not user:
+                        raise UserNotFoundException
             setattr(task_for_update, key, value)
 
         self.session.add(task_for_update)
