@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from models.user import UserOutDTO
 from models.task import TaskCreateDTO, Task, TaskUpdateDTO, TaskWithAssigneeDTO
 from service.task_service import TaskServiceDep
-from utils.dependencies import admin_required, get_current_user
+from utils.dependencies import get_current_user
 from utils.exception import UserNotFoundException
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 @router.get("/", response_model=List[TaskWithAssigneeDTO])
 async def get_all_tasks(
-    task_service: TaskServiceDep, current_admin: UserOutDTO = Depends(admin_required)
+    task_service: TaskServiceDep, current_user: UserOutDTO = Depends(get_current_user)
 ):
     tasks = task_service.find_all()
     return tasks
