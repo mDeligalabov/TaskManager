@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: task_manager_db
+      MYSQL_USER: tm_user
+      MYSQL_PASSWORD: tm_user_password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  fastapi:
+    build:
+      context: ./be
+      dockerfile: Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+    env_file:
+      - ./be/.env
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+    name: mysql-data
+
+networks:
+  app-network:
+    driver: bridge
