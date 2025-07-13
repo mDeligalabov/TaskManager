@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../utils/api";
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -20,29 +21,21 @@ export default function Login() {
             const formData = new URLSearchParams();
             formData.append("username", username);
             formData.append("password", password);
-            const response = await fetch("http://localhost:8000/users/login", {
-                method: "POST",
+            
+            const response = await api.post("/users/login", formData.toString(), {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: formData.toString()
+                }
             });
-            if (!response.ok) {
-                const data = await response.json();
-                setError(data.detail || "Login failed. Please try again.");
-                setLoading(false);
-                return;
-            }
-            const data = await response.json();
-            // Assuming the API returns an access_token
-            if (data.access_token) {
-                localStorage.setItem("token", data.access_token);
+            
+            if (response.data.access_token) {
+                localStorage.setItem("token", response.data.access_token);
                 navigate("/home");
             } else {
                 setError("Invalid response from server.");
             }
-        } catch (err) {
-            setError("Network error. Please try again later.");
+        } catch (err: any) {
+            setError(err.response?.data?.detail || "Network error. Please try again later.");
         } finally {
             setLoading(false);
         }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../utils/api";
 
 export default function Register() {
     const [name, setName] = useState("");
@@ -20,23 +21,11 @@ export default function Register() {
         }
         setLoading(true);
         try {
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/register`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ name, email, password })
-            });
-            if (!response.ok) {
-                const data = await response.json();
-                setError(data.detail || "Registration failed. Please try again.");
-                setLoading(false);
-                return;
-            }
+            await api.post("/users/register", { name, email, password });
             setSuccess("Registration successful! Redirecting to login...");
             setTimeout(() => navigate("/login"), 1500);
-        } catch (err) {
-            setError("Network error. Please try again later.");
+        } catch (err: any) {
+            setError(err.response?.data?.detail || "Network error. Please try again later.");
         } finally {
             setLoading(false);
         }

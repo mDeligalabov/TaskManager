@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../utils/api";
 
 interface CreateTaskData {
     title: string;
@@ -12,23 +13,11 @@ export function useCreateTask() {
     const createTask = async (taskData: CreateTaskData, onSuccess?: () => void) => {
         setIsCreating(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/tasks`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    title: taskData.title, 
-                    description: taskData.description, 
-                    assignee_id: taskData.assignedTo
-                })
+            await api.post('/tasks', {
+                title: taskData.title, 
+                description: taskData.description, 
+                assignee_id: taskData.assignedTo
             });
-            
-            if (!response.ok) {
-                throw new Error('Failed to create task');
-            }
             
             onSuccess?.();
         } catch (error) {

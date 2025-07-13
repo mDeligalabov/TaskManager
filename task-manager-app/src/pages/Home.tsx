@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import CreateTaskModal from "../components/CreateTaskModal";
 import TaskDetailsModal from "../components/TaskDetailsModal";
+import api from "../utils/api";
 
 export default function Home() {
     const { tasks, loading, error, refetchTasks } = useTasks();
@@ -25,19 +26,8 @@ export default function Home() {
 
     const handleTaskClick = async (task: any) => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/tasks/${task.id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-            
-            if (!response.ok) {
-                throw new Error('Failed to fetch task details');
-            }
-            
-            const taskDetails = await response.json();
-            setSelectedTask(taskDetails);
+            const response = await api.get(`/tasks/${task.id}`);
+            setSelectedTask(response.data);
             setIsDetailsModalOpen(true);
         } catch (error) {
             console.error('Error fetching task details:', error);
@@ -53,19 +43,8 @@ export default function Home() {
         // If the details modal is open, re-fetch the selected task to update the modal
         if (isDetailsModalOpen && selectedTask) {
             try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/tasks/${selectedTask.id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch updated task details');
-                }
-                
-                const updatedTaskDetails = await response.json();
-                setSelectedTask(updatedTaskDetails);
+                const response = await api.get(`/tasks/${selectedTask.id}`);
+                setSelectedTask(response.data);
             } catch (error) {
                 console.error('Error fetching updated task details:', error);
             }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../utils/api";
 
 export function useDeleteTask() {
     const [isDeleting, setIsDeleting] = useState(false);
@@ -6,18 +7,7 @@ export function useDeleteTask() {
     const deleteTask = async (taskId: number, onSuccess?: () => void) => {
         setIsDeleting(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/tasks/${taskId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-            
-            if (!response.ok) {
-                throw new Error('Failed to delete task');
-            }
-            
+            await api.delete(`/tasks/${taskId}`);
             onSuccess?.();
         } catch (error) {
             console.error('Error deleting task:', error);

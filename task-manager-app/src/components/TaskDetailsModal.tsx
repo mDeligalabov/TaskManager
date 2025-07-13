@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useUpdateTask } from '../hooks/useUpdateTask';
 import { useDeleteTask } from '../hooks/useDeleteTask';
 import { useCompleteTask } from '../hooks/useCompleteTask';
+import api from '../utils/api';
 
 interface User {
     id: number;
@@ -55,23 +56,10 @@ export default function TaskDetailsModal({ isOpen, onClose, task, onTaskUpdated 
     const fetchUsers = async () => {
         setLoadingUsers(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/all`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch users');
-            }
-            const data = await response.json();
-            setUsers(data);
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                console.error(err.message);
-            } else {
-                console.error('Failed to load users');
-            }
+            const response = await api.get('/users/all');
+            setUsers(response.data);
+        } catch (err: any) {
+            console.error('Failed to load users:', err.response?.data?.detail || err.message);
         } finally {
             setLoadingUsers(false);
         }

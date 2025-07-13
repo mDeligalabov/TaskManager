@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import api from "../utils/api";
 
 export interface Task {
   id: number;
@@ -27,19 +28,10 @@ export function useTasks() {
     setLoading(true);
     setError(null);
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/tasks/my`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch tasks");
-      }
-      const data = await response.json();
-      setTasks(data);
+      const response = await api.get('/tasks/my');
+      setTasks(response.data);
     } catch (err: any) {
-      setError(err.message || "Unknown error");
+      setError(err.response?.data?.detail || err.message || "Unknown error");
     } finally {
       setLoading(false);
     }

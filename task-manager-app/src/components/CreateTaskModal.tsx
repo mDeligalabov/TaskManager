@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCreateTask } from '../hooks/useCreateTask';
+import api from '../utils/api';
 
 interface User {
     id: number;
@@ -32,23 +33,10 @@ export default function CreateTaskModal({ isOpen, onClose, onTaskCreated }: Crea
         setLoading(true);
         setError('');
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/all`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch users');
-            }
-            const data = await response.json();
-            setUsers(data);
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError('Failed to load users');
-            }
+            const response = await api.get('/users/all');
+            setUsers(response.data);
+        } catch (err: any) {
+            setError(err.response?.data?.detail || err.message || 'Failed to load users');
         } finally {
             setLoading(false);
         }
