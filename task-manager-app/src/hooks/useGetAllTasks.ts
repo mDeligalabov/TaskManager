@@ -18,23 +18,23 @@ export interface Task {
   };
 }
 
-export function useTasks() {
+export function useGetAllTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTasks = async () => {
+  const fetchAllTasks = async () => {
     setLoading(true);
     setError(null);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/tasks/my`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/tasks/`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch tasks");
+        throw new Error("Failed to fetch all tasks");
       }
       const data = await response.json();
       setTasks(data);
@@ -45,13 +45,13 @@ export function useTasks() {
     }
   };
 
-  const refetchTasks = () => {
-    fetchTasks();
+  const refetchAllTasks = () => {
+    fetchAllTasks();
   };
 
   useEffect(() => {
-    fetchTasks();
+    fetchAllTasks();
   }, []);
 
-  return { tasks, loading, error, refetchTasks };
-}
+  return { tasks, loading, error, refetchAllTasks };
+} 

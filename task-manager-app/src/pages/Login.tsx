@@ -55,182 +55,51 @@ export default function Login() {
         }
     }, [navigate]);
 
-    const styles = {
-        container: {
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#1a1a1a',
-            padding: '20px'
-        },
-        formContainer: {
-            width: '100%',
-            maxWidth: '400px',
-            backgroundColor: '#2d2d2d',
-            borderRadius: '12px',
-            padding: '32px',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-            border: '1px solid #404040'
-        },
-        title: {
-            color: '#ffffff',
-            fontSize: '28px',
-            fontWeight: '600',
-            marginBottom: '32px',
-            textAlign: 'center' as const
-        },
-        form: {
-            display: 'flex',
-            flexDirection: 'column' as const,
-            gap: '20px'
-        },
-        inputGroup: {
-            display: 'flex',
-            flexDirection: 'column' as const,
-            gap: '8px'
-        },
-        label: {
-            color: '#e0e0e0',
-            fontSize: '14px',
-            fontWeight: '500'
-        },
-        input: {
-            padding: '12px 16px',
-            backgroundColor: '#404040',
-            border: '1px solid #555555',
-            borderRadius: '8px',
-            color: '#ffffff',
-            fontSize: '16px',
-            transition: 'all 0.2s ease',
-            outline: 'none'
-        },
-        inputFocus: {
-            borderColor: '#007acc',
-            boxShadow: '0 0 0 2px rgba(0, 122, 204, 0.2)'
-        },
-        button: {
-            padding: '14px 20px',
-            backgroundColor: '#007acc',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '16px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            marginTop: '8px'
-        },
-        buttonHover: {
-            backgroundColor: '#005a9e'
-        },
-        buttonDisabled: {
-            backgroundColor: '#555555',
-            cursor: 'not-allowed'
-        },
-        error: {
-            color: '#ff6b6b',
-            fontSize: '14px',
-            textAlign: 'center' as const,
-            padding: '8px',
-            backgroundColor: 'rgba(255, 107, 107, 0.1)',
-            borderRadius: '6px',
-            border: '1px solid rgba(255, 107, 107, 0.3)'
-        },
-        linkContainer: {
-            textAlign: 'center' as const,
-            marginTop: '24px',
-            paddingTop: '20px',
-            borderTop: '1px solid #404040'
-        },
-        link: {
-            color: '#007acc',
-            textDecoration: 'none',
-            fontWeight: '500',
-            transition: 'color 0.2s ease'
-        },
-        linkHover: {
-            color: '#005a9e'
-        },
-        linkText: {
-            color: '#b0b0b0',
-            fontSize: '14px'
-        }
-    };
-
     return (
-        <div style={styles.container}>
-            <div style={styles.formContainer}>
-                <h1 style={styles.title}>Welcome Back</h1>
-                <form onSubmit={handleSubmit} style={styles.form}>
-                    <div style={styles.inputGroup}>
-                        <label htmlFor="username" style={styles.label}>Username</label>
-                        <input
-                            id="username"
-                            type="text"
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
-                            style={styles.input}
+        <div className="min-vh-100 d-flex align-items-center justify-content-center bg-dark p-4">
+            <div className="w-100" style={{ maxWidth: '400px' }}>
+                <div className="bg-secondary bg-opacity-75 rounded p-4 shadow">
+                    <h1 className="text-white text-center fw-bold mb-4">Welcome Back</h1>
+                    <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+                        <div className="d-flex flex-column gap-2">
+                            <label htmlFor="username" className="text-light fw-medium">Username</label>
+                            <input
+                                id="username"
+                                type="text"
+                                value={username}
+                                onChange={e => setUsername(e.target.value)}
+                                className="form-control bg-dark text-white border-secondary"
+                                disabled={loading}
+                            />
+                        </div>
+                        <div className="d-flex flex-column gap-2">
+                            <label htmlFor="password" className="text-light fw-medium">Password</label>
+                            <input
+                                id="password"
+                                type="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                className="form-control bg-dark text-white border-secondary"
+                                disabled={loading}
+                            />
+                        </div>
+                        {error && <div className="alert alert-danger text-center" role="alert">{error}</div>}
+                        <button 
+                            type="submit" 
+                            className={`btn w-100 ${loading ? 'btn-secondary' : 'btn-primary'}`}
                             disabled={loading}
-                            onFocus={(e) => {
-                                (e.target as HTMLInputElement).style.borderColor = styles.inputFocus.borderColor;
-                                (e.target as HTMLInputElement).style.boxShadow = styles.inputFocus.boxShadow;
-                            }}
-                            onBlur={(e) => {
-                                (e.target as HTMLInputElement).style.borderColor = '#555555';
-                                (e.target as HTMLInputElement).style.boxShadow = 'none';
-                            }}
-                        />
+                        >
+                            {loading ? "Signing in..." : "Sign In"}
+                        </button>
+                    </form>
+                    <div className="text-center mt-4 pt-3 border-top border-secondary">
+                        <p className="text-light mb-0">
+                            Don't have an account?{' '}
+                            <Link to="/register" className="text-primary text-decoration-none fw-medium">
+                                Create one
+                            </Link>
+                        </p>
                     </div>
-                    <div style={styles.inputGroup}>
-                        <label htmlFor="password" style={styles.label}>Password</label>
-                        <input
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                            style={styles.input}
-                            disabled={loading}
-                            onFocus={(e) => {
-                                (e.target as HTMLInputElement).style.borderColor = styles.inputFocus.borderColor;
-                                (e.target as HTMLInputElement).style.boxShadow = styles.inputFocus.boxShadow;
-                            }}
-                            onBlur={(e) => {
-                                (e.target as HTMLInputElement).style.borderColor = '#555555';
-                                (e.target as HTMLInputElement).style.boxShadow = 'none';
-                            }}
-                        />
-                    </div>
-                    {error && <div style={styles.error}>{error}</div>}
-                    <button 
-                        type="submit" 
-                        style={loading ? {...styles.button, ...styles.buttonDisabled} : styles.button}
-                        disabled={loading}
-                        onMouseEnter={(e) => {
-                            if (!loading) {
-                                e.currentTarget.style.backgroundColor = styles.buttonHover.backgroundColor;
-                            }
-                        }}
-                        onMouseLeave={(e) => {
-                            if (!loading) {
-                                e.currentTarget.style.backgroundColor = styles.button.backgroundColor;
-                            }
-                        }}
-                    >
-                        {loading ? "Signing in..." : "Sign In"}
-                    </button>
-                </form>
-                <div style={styles.linkContainer}>
-                    <p style={styles.linkText}>
-                        Don't have an account?{' '}
-                        <Link to="/register" style={styles.link} onMouseEnter={(e) => {
-                            (e.target as HTMLElement).style.color = styles.linkHover.color;
-                        }} onMouseLeave={(e) => {
-                            (e.target as HTMLElement).style.color = styles.link.color;
-                        }}>
-                            Create one
-                        </Link>
-                    </p>
                 </div>
             </div>
         </div>
