@@ -44,10 +44,31 @@ export default function Home() {
         }
     };
 
-    const handleTaskUpdated = () => {
+    const handleTaskUpdated = async () => {
         refetchTasks();
         if (activeTab === 'all') {
             refetchAllTasks();
+        }
+        
+        // If the details modal is open, re-fetch the selected task to update the modal
+        if (isDetailsModalOpen && selectedTask) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/tasks/${selectedTask.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch updated task details');
+                }
+                
+                const updatedTaskDetails = await response.json();
+                setSelectedTask(updatedTaskDetails);
+            } catch (error) {
+                console.error('Error fetching updated task details:', error);
+            }
         }
     };
 

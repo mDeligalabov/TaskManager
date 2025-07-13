@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTaskOperations } from '../hooks/useTaskOperations';
+import { useCreateTask } from '../hooks/useCreateTask';
 
 interface User {
     id: number;
@@ -14,10 +14,10 @@ interface CreateTaskModalProps {
 }
 
 export default function CreateTaskModal({ isOpen, onClose, onTaskCreated }: CreateTaskModalProps) {
-    const { createTask, isCreating } = useTaskOperations();
+    const { createTask, isCreating } = useCreateTask();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [assignedTo, setAssignedTo] = useState<number | null>(null);
+    const [assignedTo, setAssignedTo] = useState<number>(-1);
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -60,15 +60,14 @@ export default function CreateTaskModal({ isOpen, onClose, onTaskCreated }: Crea
             setError('Title is required');
             return;
         }
-        if (assignedTo === -1) {
-            setAssignedTo(null);
-        }
+        // Convert -1 to null for the API call
+        const assigneeId = assignedTo === -1 ? null : assignedTo;
 
         try {
             await createTask({ 
                 title: title.trim(), 
                 description: description.trim(), 
-                assignedTo 
+                assignedTo: assigneeId
             }, () => {
                 handleClose();
                 onTaskCreated?.();
@@ -136,7 +135,7 @@ export default function CreateTaskModal({ isOpen, onClose, onTaskCreated }: Crea
                                 onChange={(e) => setAssignedTo(Number(e.target.value))}
                                 className="form-select bg-dark text-white border-secondary"
                             >
-                                <option value={-1}>Unassigne</option>
+                                <option value={-1}>Unassigned</option>
                                 {users.map(user => (
                                     <option key={user.id} value={user.id}>
                                         {user.name} ({user.email})

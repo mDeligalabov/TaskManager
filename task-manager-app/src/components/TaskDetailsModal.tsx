@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useTaskOperations } from '../hooks/useTaskOperations';
+import { useUpdateTask } from '../hooks/useUpdateTask';
+import { useDeleteTask } from '../hooks/useDeleteTask';
+import { useCompleteTask } from '../hooks/useCompleteTask';
 
 interface User {
     id: number;
@@ -25,7 +27,9 @@ interface TaskDetailsModalProps {
 }
 
 export default function TaskDetailsModal({ isOpen, onClose, task, onTaskUpdated }: TaskDetailsModalProps) {
-    const { deleteTask, completeTask, updateTask, isDeleting, isCompleting, isUpdating } = useTaskOperations();
+    const { updateTask, isUpdating } = useUpdateTask();
+    const { deleteTask, isDeleting } = useDeleteTask();
+    const { completeTask, isCompleting } = useCompleteTask();
     const [isEditing, setIsEditing] = useState(false);
     const [editTitle, setEditTitle] = useState('');
     const [editDescription, setEditDescription] = useState('');
@@ -166,7 +170,7 @@ export default function TaskDetailsModal({ isOpen, onClose, task, onTaskUpdated 
                 <div className="modal-dialog modal-dialog-centered modal-lg" onClick={(e) => e.stopPropagation()}>
                     <div className="modal-content bg-dark border border-secondary">
                         <div className="modal-header border-bottom border-secondary">
-                            <h5 className="modal-title text-white fw-bold">Task Details</h5>
+                            <h5 className="modal-title text-white fw-bold">{isEditing ? 'Edit Task' : 'Task Details'}</h5>
                             <button 
                                 type="button" 
                                 className="btn-close btn-close-white" 
