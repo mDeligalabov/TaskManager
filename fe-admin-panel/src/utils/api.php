@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/loadenv.php';
+require_once __DIR__ . '/path.php';
 define('API_BASE', $_ENV['API_BASE']);
 
 function apiFormRequest(string $method, string $endpoint, array $formData = []) {
@@ -60,7 +61,7 @@ function apiRequest(string $method, string $endpoint, array $data = []) {
             unset($_SESSION['token']);
         }
         // Redirect to login page
-        header('Location: login.php');
+        header('Location: ' . getPath('/src/pages/login.php'));
         exit;
     }
 

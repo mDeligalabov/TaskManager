@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('Description is required');
         }
 
-        if (empty($task['assignee_id'])) {
-            $task['assignee_id'] = -1;
+        if (empty($task['id']) && $task['assignee_id'] == -1) {
+            $task['assignee_id'] = null;
         }
 
         if (empty($task['id'])) {
