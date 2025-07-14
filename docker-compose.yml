@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mysql:
@@ -27,10 +27,40 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    env_file:
-      - ./be/.env
+    environment:
+      MYSQL_HOST: task-management-mysql-1
+      MYSQL_PORT: 3306
+      MYSQL_DB: task_manager_db
+      MYSQL_USER: tm_user
+      MYSQL_PASSWORD: tm_user_password
     ports:
       - "8000:8000"
+    networks:
+      - app-network
+
+  react:
+    build:
+      context: ./task-manager-app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://fastapi:8000
+    depends_on:
+      - fastapi
+    networks:
+      - app-network
+
+  php-admin-panel:
+    build:
+      context: ./fe-admin-panel
+      dockerfile: Dockerfile
+      args:
+        - API_BASE=http://fastapi:8000
+    ports:
+      - "80:80"
+    depends_on:
+      - fastapi
     networks:
       - app-network
 
