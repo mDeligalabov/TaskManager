@@ -38,7 +38,7 @@ async def get_task(
         )
     return task
 
-@router.post("")
+@router.post("", response_model=Task)
 async def create_task(
     task_service: TaskServiceDep,
     task: TaskCreateDTO,
@@ -53,7 +53,7 @@ async def create_task(
         )
 
 
-@router.patch("/{task_id}")
+@router.patch("/{task_id}", response_model=Task)
 async def update_task(
     task_service: TaskServiceDep,
     task_id: int,
