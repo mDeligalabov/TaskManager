@@ -1,5 +1,6 @@
 <?php
-require_once 'header.php';
+require_once __DIR__ . '/src/components/header.php';
+require_once __DIR__ . '/src/utils/path.php';
 
 $order_by = $_GET['order_by'] ?? 'id';
 $order_dir = $_GET['order_dir'] ?? 'asc';
@@ -55,8 +56,8 @@ function sort_link($col, $label, $order_by, $order_dir) {
         <div class="alert alert-success"><?= htmlspecialchars($_GET['success']) ?></div>
     <?php endif; ?>
     <h1>Tasks</h1>
-    <a href="task_form.php" class="btn btn-success mb-3">New Task</a>
-    <a href="users.php" class="btn btn-secondary mb-3">Users</a>
+    <a href="./src/pages/task_form.php" class="btn btn-success mb-3">New Task</a>
+    <a href="./src/pages/users.php" class="btn btn-secondary mb-3">Users</a>
     <table class="table table-striped">
         <thead><tr>
             <th><?= sort_link('id', 'ID', $order_by, $order_dir) ?></th>
@@ -81,9 +82,9 @@ function sort_link($col, $label, $order_by, $order_dir) {
                 <?php endif; ?>
             </td>
             <td>
-                <a href="task_details.php?id=<?= $t['id'] ?>" class="btn btn-sm btn-info">View</a>
-                <a href="task_form.php?id=<?= $t['id'] ?>" class="btn btn-sm btn-primary">Edit</a>
-                <a href="delete_task.php?id=<?= $t['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this task?');">Delete</a>
+                <a href="./src/pages/task_details.php?id=<?= $t['id'] ?>" class="btn btn-sm btn-info">View</a>
+                <a href="./src/pages/task_form.php?id=<?= $t['id'] ?>" class="btn btn-sm btn-primary">Edit</a>
+                <a href="./src/pages/delete_task.php?id=<?= $t['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this task?');">Delete</a>
             </td>
         </tr>
         <?php endforeach; ?>
@@ -91,7 +92,3 @@ function sort_link($col, $label, $order_by, $order_dir) {
     </table>
 </div>
 </body></html>
-
----
-
-<!-- users.php similar updates: include header, try/catch around API calls, show alerts on errors -->

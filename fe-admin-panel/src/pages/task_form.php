@@ -1,5 +1,5 @@
 <?php
-require_once 'header.php';
+require_once __DIR__ . '/../components/header.php';
 
 $task = ['id' => '', 'title' => '', 'description' => '', 'assignee_id' => ''];
 $users = [];
@@ -40,12 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = editTask($task);
             $success = 'Task updated successfully!';
         }
-        
-        // if (empty($task['id']) && isset($result['body']['id'])) {
-        //     header("Location: task_form.php?id=" . $result['body']['id']);
-        //     exit;
-        // }
-        
+
+        header("Location: " . getPath('/index.php') . "?success=Task with id " . $result['body']['id'] . " " . ($task['id'] ? 'updated' : 'created') . " successfully");
+        exit;
     } catch (Exception $e) {
         $error = $e->getMessage();
     }
@@ -115,9 +112,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <button type="submit" class="btn btn-primary">
                                 <?= empty($task['id']) ? 'Create Task' : 'Update Task' ?>
                             </button>
-                            <a href="index.php" class="btn btn-secondary">Cancel</a>
+                            <a href="<?= getPath('/index.php') ?>" class="btn btn-secondary">Cancel</a>
                             <?php if (!empty($task['id'])): ?>
-                                <a href="delete_task.php?id=<?= $task['id'] ?>" 
+                                <a href="<?= getPath('/src/pages/delete_task.php?id=' . $task['id']) ?>" 
                                    class="btn btn-danger" 
                                    onclick="return confirm('Are you sure you want to delete this task?')">
                                     Delete Task

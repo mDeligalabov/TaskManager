@@ -1,7 +1,8 @@
 <?php
 
 session_start();
-require_once 'api.php';
+require_once __DIR__ . '/api.php';
+require_once __DIR__ . '/path.php';
 
 function isLoggedIn() {
     return isset($_SESSION['token']);
@@ -9,7 +10,7 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        header('Location: login.php');
+        header('Location: ' . getPath('/src/pages/login.php'));
         exit;
     }
 }
@@ -34,7 +35,7 @@ function login($username, $password) {
 function logout() {
     session_unset();
     session_destroy();
-    header('Location: login.php');
+    header('Location: ' . getPath('/src/pages/login.php'));
     exit;
 }
 ?>

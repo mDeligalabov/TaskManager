@@ -1,7 +1,6 @@
 <?php
-// Centralized API client using cURL with Auth and Error Handling
-require_once 'auth.php';
-const API_BASE = 'http://localhost:8000';
+require_once __DIR__ . '/loadenv.php';
+define('API_BASE', $_ENV['API_BASE']);
 
 function apiFormRequest(string $method, string $endpoint, array $formData = []) {
     $url = API_BASE . $endpoint;
@@ -69,7 +68,7 @@ function apiRequest(string $method, string $endpoint, array $data = []) {
     return ['status' => $status, 'body' => $body];
 }
 
-// Task and User methods as before, throwing on non-2xx
+// Task functions
 function getTasks() {
     $res = apiRequest('GET', '/tasks/');
     if ($res['status'] !== 200) throw new Exception('Failed to fetch tasks');
@@ -104,6 +103,7 @@ function deleteTask($id) {
     return $res;
 }
 
+// User functions
 function getUsers() {
     $res = apiRequest('GET', '/users/all');
     if ($res['status'] !== 200) throw new Exception('Failed to fetch users');
@@ -130,5 +130,14 @@ function registerAdminUser($userData) {
         throw new Exception($errorMessage);
     }
     return $res;
+}
+
+function getBaseUrl() {
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $scriptDir = rtrim(dirname($scriptName), '/\\');
+    $baseUrl = $scriptDir === '/' ? '' : $scriptDir;
+    // Log the value to a file for debugging
+    file_put_contents(__DIR__ . '/baseurl.log', $baseUrl . PHP_EOL, FILE_APPEND);
+    return $baseUrl;
 }
 ?>

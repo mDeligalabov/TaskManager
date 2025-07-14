@@ -1,11 +1,12 @@
 <?php
-require_once 'api.php';
+require_once __DIR__ . '/../utils/auth.php';
+require_once __DIR__ . '/../utils/path.php';
 
 $error = '';
 $success = '';
 
 if (isLoggedIn()) {
-    header('Location: index.php');
+    header('Location: ' . getPath('/index.php'));
     exit;
 }
 
@@ -69,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php if (!empty($success)): ?>
                         <div class="alert alert-success">
                             <?= htmlspecialchars($success) ?>
-                            <a href="login.php" class="btn btn-primary ms-3">Go to Login</a>
+                            <a href="<?= getPath('/src/pages/login.php') ?>" class="btn btn-primary ms-3">Go to Login</a>
                         </div>
                     <?php endif; ?>
 
@@ -101,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Register</button>
-                            <a href="login.php" class="btn btn-secondary">Back to Login</a>
+                            <a href="<?= getPath('/src/pages/login.php') ?>" class="btn btn-secondary">Back to Login</a>
                         </div>
                     </form>
                 </div>

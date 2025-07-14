@@ -1,5 +1,6 @@
 <?php
-require_once 'header.php';
+require_once __DIR__ . '/../components/header.php';
+require_once __DIR__ . '/../utils/path.php';
 
 $users = [];
 $error = '';
@@ -48,7 +49,7 @@ try {
     
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Users Management</h1>
-        <a href="index.php" class="btn btn-secondary">Back to Tasks</a>
+        <a href="<?= getPath('/index.php') ?>" class="btn btn-secondary">Back to Tasks</a>
     </div>
     
     <div class="card">

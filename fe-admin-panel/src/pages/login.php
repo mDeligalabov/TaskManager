@@ -1,10 +1,12 @@
 <?php
-require_once 'auth.php';
+require_once __DIR__ . '/../utils/auth.php';
+require_once __DIR__ . '/../utils/path.php';
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = login($_POST['username'], $_POST['password']);
     if ($result['success']) {
-        header('Location: index.php'); exit;
+        header('Location: ' . getPath('/index.php')); 
+        exit;
     } else {
         $error = $result['error'];
     }
@@ -30,6 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <button class="btn btn-primary" type="submit">Login</button>
     </form>
-    <p class="mt-3">Don't have an admin account? <a href="register.php">Register</a></p>
+    <p class="mt-3">Don't have an admin account? <a href="<?= getPath('/src/pages/register.php') ?>">Register</a></p>
 </div>
 </body></html>

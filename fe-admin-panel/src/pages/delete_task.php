@@ -1,5 +1,6 @@
 <?php
-require_once 'header.php';
+require_once __DIR__ . '/../utils/path.php';
+require_once __DIR__ . '/../components/header.php';
 
 $error = '';
 $success = '';
@@ -12,13 +13,12 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     try {
         deleteTask($taskId);
         $success = 'Task deleted successfully!';
-        header("Location: index.php?success=Task with id $taskId deleted successfully");
-        exit;
     } catch (Exception $e) {
         $error = 'Failed to delete task: ' . $e->getMessage();
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +39,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
                         <div class="alert alert-danger">
                             <?= htmlspecialchars($error) ?>
                             <div class="mt-3">
-                                <a href="index.php" class="btn btn-secondary">Back to Tasks</a>
+                                <a href="<?= getPath('/index.php') ?>" class="btn btn-secondary">Back to Tasks</a>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -48,7 +48,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
                         <div class="alert alert-success">
                             <?= htmlspecialchars($success) ?>
                             <div class="mt-3">
-                                <a href="index.php" class="btn btn-primary">Back to Tasks</a>
+                                <a href="<?= getPath('/index.php') ?>" class="btn btn-primary">Back to Tasks</a>
                             </div>
                         </div>
                     <?php endif; ?>

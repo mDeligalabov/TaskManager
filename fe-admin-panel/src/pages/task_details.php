@@ -1,5 +1,6 @@
 <?php
-require_once 'header.php';
+require_once __DIR__ . '/../utils/path.php';
+require_once __DIR__ . '/../components/header.php';
 
 $task = null;
 $assignee = null;
@@ -43,7 +44,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     <?php if (!empty($error)): ?>
         <div class="alert alert-danger">
             <?= htmlspecialchars($error) ?>
-            <a href="index.php" class="btn btn-secondary ms-3">Back to Tasks</a>
+            <a href="<?= getPath('/index.php') ?>" class="btn btn-secondary ms-3">Back to Tasks</a>
         </div>
     <?php elseif ($task): ?>
         <div class="row">
@@ -52,8 +53,8 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h2>Task Details</h2>
                         <div>
-                            <a href="task_form.php?id=<?= htmlspecialchars($task['id']) ?>" class="btn btn-primary">Edit Task</a>
-                            <a href="index.php" class="btn btn-secondary">Back to Tasks</a>
+                            <a href="<?= getPath('/src/pages/task_form.php?id=' . htmlspecialchars($task['id'])) ?>" class="btn btn-primary">Edit Task</a>
+                            <a href="<?= getPath('/index.php') ?>" class="btn btn-secondary">Back to Tasks</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -155,15 +156,15 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
                         
                         <div class="mt-4 pt-3 border-top">
                             <div class="d-flex gap-2">
-                                <a href="task_form.php?id=<?= htmlspecialchars($task['id']) ?>" class="btn btn-primary">
+                                <a href="<?= getPath('/src/pages/task_form.php?id=' . htmlspecialchars($task['id'])) ?>" class="btn btn-primary">
                                     <i class="bi bi-pencil"></i> Edit Task
                                 </a>
-                                <a href="delete_task.php?id=<?= htmlspecialchars($task['id']) ?>" 
+                                <a href="<?= getPath('/src/pages/delete_task.php?id=' . htmlspecialchars($task['id'])) ?>" 
                                    class="btn btn-danger" 
                                    onclick="return confirm('Are you sure you want to delete this task?')">
                                     <i class="bi bi-trash"></i> Delete Task
                                 </a>
-                                <a href="index.php" class="btn btn-secondary">
+                                <a href="<?= getPath('/index.php') ?>" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left"></i> Back to Tasks
                                 </a>
                             </div>
