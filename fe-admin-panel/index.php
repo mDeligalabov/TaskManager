@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/src/utils/require_auth.php';
 require_once __DIR__ . '/src/components/header.php';
 require_once __DIR__ . '/src/utils/path.php';
 

@@ -1,8 +1,3 @@
-<?php
-require_once __DIR__ . '/../utils/auth.php'; 
-requireLogin(); 
-?>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="<?= getPath('/index.php') ?>">Admin Panel</a>

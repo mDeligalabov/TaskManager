@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../components/header.php';
+require_once __DIR__ . '/../utils/require_auth.php';
 
 $task = ['id' => '', 'title' => '', 'description' => '', 'assignee_id' => ''];
 $users = [];
@@ -55,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+require_once __DIR__ . '/../components/header.php';
 ?>
 <!DOCTYPE html>
 <html>
