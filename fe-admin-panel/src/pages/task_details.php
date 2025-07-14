@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../utils/path.php';
-require_once __DIR__ . '/src/utils/require_auth.php';
+require_once __DIR__ . '/../utils/require_auth.php';
 require_once __DIR__ . '/../components/header.php';
 
 $task = null;
