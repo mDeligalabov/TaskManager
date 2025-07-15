@@ -13,7 +13,7 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u tm_user -ptm_user_password && mysql -u tm_user -ptm_user_password -e 'SELECT 1' task_manager_db"]
       interval: 10s
       timeout: 5s
       retries: 5
