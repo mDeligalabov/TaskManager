@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import joinedload
@@ -7,6 +8,7 @@ from models.task import TaskCreateDTO, Task, TaskUpdateDTO
 from models.user import User
 from utils.exception import UserNotFoundException
 
+logger = logging.getLogger(__name__)
 
 class TaskService:
     def __init__(self, session: Session = Depends(get_session)):
@@ -42,6 +44,8 @@ class TaskService:
         self.session.add(db_task)
         self.session.commit()
         self.session.refresh(db_task)
+
+        logger.info(f"Task with id: {db_task.id} created")
         return db_task
 
     def update_task(self, task_id: int, task_update: TaskUpdateDTO):
@@ -68,6 +72,8 @@ class TaskService:
         self.session.commit()
         self.session.refresh(task_for_update)
 
+        logger.info(f"Task with id: {task_id} updated")
+
         return task_for_update
 
     def delete_task(self, task_id: int):
@@ -77,9 +83,11 @@ class TaskService:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Task not found"
             )
-
+        
         self.session.delete(task_for_deletion)
         self.session.commit()
+        logger.info(f"Task with id: {task_id} updated")
+
 
 
 TaskServiceDep = Annotated[TaskService, Depends()]

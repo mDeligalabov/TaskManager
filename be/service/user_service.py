@@ -66,6 +66,7 @@ class UserService:
                 user.is_active = False
                 self.session.add(user)
                 self.session.commit()
+                logger.info(f"User with email: {user.email} deactivated")
         except UserNotFoundException:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
@@ -78,6 +79,7 @@ class UserService:
                 user.is_active = True
                 self.session.add(user)
                 self.session.commit()
+                logger.info(f"User with email: {user.email} activated")
         except UserNotFoundException:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
